@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
+import HomeScreen from './src/screens/HomeScreen';
+import CalendarScreen from './src/screens/CalendarScreen';
+import StatsScreen from './src/screens/StatsScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import { registerNotification, scheduleDailyReminder } from './src/notifications';
+
+const Tab = createBottomTabNavigator();
+
+const icons = { ホーム: '🏠', カレンダー: '📅', 統計: '📊', 設定: '⚙️' };
 
 export default function App() {
+  useEffect(() => {
+    (async () => {
+      await registerNotification();
+      await scheduleDailyReminder(20, 0);
+    })();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: () => <Text style={{ fontSize: 22 }}>{icons[route.name]}</Text>,
+          tabBarLabelStyle: { fontSize: 12 },
+          headerTitleAlign: 'center',
+        })}
+      >
+        <Tab.Screen name="ホーム" component={HomeScreen} />
+        <Tab.Screen name="カレンダー" component={CalendarScreen} />
+        <Tab.Screen name="統計" component={StatsScreen} />
+        <Tab.Screen name="設定" component={SettingsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
