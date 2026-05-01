@@ -66,8 +66,11 @@ npm install
 # Web 版で起動
 npx expo start --web
 
-# または Expo Go で実機テスト
+# Expo Go で実機テスト
 npx expo start
+
+# Expo Go で実機テスト（WSL などネットワーク問題がある場合はトンネルモード）
+npx expo start --tunnel
 ```
 
 ### 方法 2: PowerShell からワンライナーで実行
