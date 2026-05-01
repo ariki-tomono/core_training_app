@@ -108,6 +108,30 @@ src/
 }
 ```
 
+## トラブルシューティング
+
+### Render Error: `expected dynamic type 'boolean', but had type 'string'`（2025-06 解決済み）
+
+**原因**: 依存パッケージが Expo SDK 54 の互換バージョンより新しすぎた。
+
+| パッケージ | 問題のバージョン | 修正後 |
+|---|---|---|
+| `react-native-screens` | 4.24.0 | ~4.16.0 |
+| `@react-native-async-storage/async-storage` | 3.0.2 | 2.2.0 |
+| `expo-notifications` | 55.0.21 | ~0.32.17 |
+| `expo-device` | 55.0.15 | ~8.0.10 |
+| `react-native-safe-area-context` | 5.7.0 | ~5.6.0 |
+
+**解決方法**:
+
+```bash
+npx expo install --fix
+```
+
+**補足**: `App.js` の通知初期化処理に try-catch を追加し、通知セットアップ失敗時にアプリ全体がクラッシュしないよう改善。
+
+**予防策**: パッケージ追加・更新時は `npm install` ではなく `npx expo install パッケージ名` を使うと、Expo SDK と互換性のあるバージョンが自動選択される。
+
 ## ライセンス
 
 MIT
