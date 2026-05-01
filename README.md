@@ -144,6 +144,41 @@ npx expo export --platform web
 - リポジトリの **Settings** → **Pages** → **Source** を **GitHub Actions** に設定
 - `app.json` の `experiments.baseUrl` にリポジトリ名 `/core_training_app` を指定済み
 
+## アプリアイコンの作成
+
+iPhone の「ホーム画面に追加」や Android の PWA インストール時に表示されるアイコンは、`assets/icon.png`（1024x1024）から生成しています。
+
+### 生成済みファイル
+
+| ファイル | サイズ | 用途 |
+|---|---|---|
+| `public/apple-touch-icon.png` | 180x180 | iPhone ホーム画面アイコン |
+| `public/icon-192.png` | 192x192 | Android PWA アイコン |
+| `public/icon-512.png` | 512x512 | Android PWA スプラッシュ用 |
+
+### アイコンを差し替える場合
+
+1. `assets/icon.png` を新しい画像（1024x1024 の PNG 推奨）に置き換える
+2. 以下のコマンドで各サイズを再生成
+
+```bash
+python3 -c "
+from PIL import Image
+img = Image.open('assets/icon.png')
+for size in [192, 512, 180]:
+    resized = img.resize((size, size), Image.LANCZOS)
+    if size == 180:
+        resized.save('public/apple-touch-icon.png')
+    else:
+        resized.save(f'public/icon-{size}.png')
+print('done')
+"
+```
+
+> Pillow が未インストールの場合は `pip install Pillow` でインストールしてください。
+
+3. コミット & push すると GitHub Pages に反映される
+
 ## トラブルシューティング
 
 ### Render Error: `expected dynamic type 'boolean', but had type 'string'`（2025-06 解決済み）
