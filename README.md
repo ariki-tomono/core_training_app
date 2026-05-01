@@ -111,6 +111,39 @@ src/
 }
 ```
 
+## デプロイ（GitHub Pages）
+
+Web 版を GitHub Pages で公開しています。
+
+**公開 URL**: https://ariki-tomono.github.io/core_training_app/
+
+### 自動デプロイ
+
+`master` ブランチに push すると、GitHub Actions が自動で Web ビルド → GitHub Pages にデプロイします。
+
+```bash
+git add -A
+git commit -m "変更内容"
+git push origin master
+```
+
+### 手動デプロイ
+
+GitHub リポジトリの **Actions** タブ → **Deploy to GitHub Pages** → **Run workflow** から手動実行も可能です。
+
+### ローカルで Web ビルド確認
+
+```bash
+npx expo export --platform web
+```
+
+`dist/` フォルダに成果物が出力されます。
+
+### GitHub Pages の設定
+
+- リポジトリの **Settings** → **Pages** → **Source** を **GitHub Actions** に設定
+- `app.json` の `experiments.baseUrl` にリポジトリ名 `/core_training_app` を指定済み
+
 ## トラブルシューティング
 
 ### Render Error: `expected dynamic type 'boolean', but had type 'string'`（2025-06 解決済み）
