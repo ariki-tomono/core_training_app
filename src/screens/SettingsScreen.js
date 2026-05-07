@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
+import React, { useState, useCallback, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, Platform, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { getMenus, saveMenus } from '../storage';
+import { getMenus, saveMenus, exportAllData, importAllData } from '../storage';
 
 export default function SettingsScreen() {
   const [menus, setMenus] = useState([]);
@@ -9,6 +9,7 @@ export default function SettingsScreen() {
   const [target, setTarget] = useState('');
   const [unit, setUnit] = useState('回');
   const [editId, setEditId] = useState(null);
+  const fileInputRef = useRef(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -61,6 +62,45 @@ export default function SettingsScreen() {
     setUnit('回');
   };
 
+  const handleExport = async () => {
+    try {
+      const json = await exportAllData();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `core_training_backup_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      Alert.alert('完了', 'データをエクスポートしました');
+    } catch (e) {
+      Alert.alert('エラー', 'エクスポートに失敗しました');
+    }
+  };
+
+  const handleImport = () => {
+    if (Platform.OS === 'web') {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const onFileSelected = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        await importAllData(e.target.result);
+        setMenus(await getMenus());
+        Alert.alert('完了', 'データをインポートしました');
+      } catch (err) {
+        Alert.alert('エラー', 'ファイルの形式が正しくありません');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.form}>
@@ -86,6 +126,27 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           )}
         </View>
+      </View>
+
+      <View style={styles.dataSection}>
+        <Text style={styles.formTitle}>データ管理</Text>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.exportBtn} onPress={handleExport}>
+            <Text style={styles.exportBtnText}>📤 エクスポート</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.importBtn} onPress={handleImport}>
+            <Text style={styles.importBtnText}>📥 インポート</Text>
+          </TouchableOpacity>
+        </View>
+        {Platform.OS === 'web' && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            style={{ display: 'none' }}
+            onChange={onFileSelected}
+          />
+        )}
       </View>
 
       <FlatList
@@ -121,6 +182,11 @@ const styles = StyleSheet.create({
   saveBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   cancelBtn: { flex: 1, backgroundColor: '#eee', borderRadius: 8, padding: 12, alignItems: 'center' },
   cancelBtnText: { color: '#666', fontSize: 16 },
+  dataSection: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 16, elevation: 2 },
+  exportBtn: { flex: 1, backgroundColor: '#2196F3', borderRadius: 8, padding: 12, alignItems: 'center' },
+  exportBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
+  importBtn: { flex: 1, backgroundColor: '#FF9800', borderRadius: 8, padding: 12, alignItems: 'center' },
+  importBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
   card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 8, flexDirection: 'row', alignItems: 'center', elevation: 2 },
   menuName: { fontSize: 16, fontWeight: 'bold' },
   menuTarget: { fontSize: 14, color: '#888' },

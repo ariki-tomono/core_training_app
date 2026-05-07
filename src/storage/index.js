@@ -42,3 +42,18 @@ export async function getLogForDate(date) {
   const logs = await getLogs();
   return logs[date] || {};
 }
+
+export async function exportAllData() {
+  const menus = await AsyncStorage.getItem(KEYS.MENUS);
+  const logs = await AsyncStorage.getItem(KEYS.LOGS);
+  return JSON.stringify({
+    menus: menus ? JSON.parse(menus) : [],
+    logs: logs ? JSON.parse(logs) : {},
+  });
+}
+
+export async function importAllData(jsonStr) {
+  const data = JSON.parse(jsonStr);
+  if (data.menus) await AsyncStorage.setItem(KEYS.MENUS, JSON.stringify(data.menus));
+  if (data.logs) await AsyncStorage.setItem(KEYS.LOGS, JSON.stringify(data.logs));
+}
