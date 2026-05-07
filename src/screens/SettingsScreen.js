@@ -180,6 +180,12 @@ export default function SettingsScreen() {
         <Text style={styles.aboutItem}>⚙️ メニューの追加・編集・削除</Text>
         <Text style={styles.aboutItem}>💾 データのエクスポート・インポート</Text>
       </View>
+      <View style={styles.licenseSection}>
+        <Text style={styles.licenseTitle}>ライセンス</Text>
+        <Text style={styles.licenseText}>MIT License</Text>
+        <Text style={styles.licenseText}>Copyright (c) 2025 Masayuki Ariki</Text>
+        <Text style={styles.licenseBody}>{'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'}</Text>
+      </View>
     </View>
   );
 
@@ -241,4 +247,8 @@ const styles = StyleSheet.create({
   aboutText: { fontSize: 14, color: '#666', textAlign: 'center', marginBottom: 16 },
   aboutList: { gap: 8 },
   aboutItem: { fontSize: 14, color: '#444' },
+  licenseSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#eee' },
+  licenseTitle: { fontSize: 14, fontWeight: 'bold', marginBottom: 6 },
+  licenseText: { fontSize: 12, color: '#666', marginBottom: 2 },
+  licenseBody: { fontSize: 11, color: '#999', marginTop: 8, lineHeight: 16 },
 });
