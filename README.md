@@ -5,7 +5,7 @@
 ## 機能
 
 - **トレーニング記録** — 日々の実績値を入力し、目標との差分を確認
-- **カレンダー表示** — 月別で達成状況を 🟢全達成 / 🟡一部達成 で色分け表示
+- **カレンダー表示** — 月別で達成状況を 🟢全達成 / 🟡一部達成 で色分け表示、日付タップで記録の入力・確認が可能
 - **統計ダッシュボード** — 連続達成日数、週/月の達成率、メニュー別達成率をグラフ表示
 - **メニュー管理** — トレーニングメニューの追加・編集・削除
 - **リマインダー通知** — 毎日 20:00 に未完了の場合プッシュ通知
@@ -155,6 +155,8 @@ iPhone の「ホーム画面に追加」や Android の PWA インストール�
 | `public/apple-touch-icon.png` | 180x180 | iPhone ホーム画面アイコン |
 | `public/icon-192.png` | 192x192 | Android PWA アイコン |
 | `public/icon-512.png` | 512x512 | Android PWA スプラッシュ用 |
+| `public/icon-maskable-192.png` | 192x192 | Android アダプティブアイコン（maskable） |
+| `public/icon-maskable-512.png` | 512x512 | Android アダプティブアイコン（maskable） |
 
 ### アイコンを差し替える場合
 
@@ -175,9 +177,27 @@ print('done')
 "
 ```
 
+3. maskable アイコンも再生成（Android のアダプティブアイコン用、中央90%にイラストを配置）
+
+```bash
+python3 -c "
+from PIL import Image
+img = Image.open('assets/icon.png').convert('RGBA')
+bg_color = img.getpixel((0, 0))[:3]
+for size in [192, 512]:
+    canvas = Image.new('RGBA', (size, size), bg_color + (255,))
+    inner_size = int(size * 0.90)
+    resized = img.resize((inner_size, inner_size), Image.LANCZOS)
+    offset = (size - inner_size) // 2
+    canvas.paste(resized, (offset, offset), resized)
+    canvas.convert('RGB').save(f'public/icon-maskable-{size}.png')
+print('done')
+"
+```
+
 > Pillow が未インストールの場合は `pip install Pillow` でインストールしてください。
 
-3. コミット & push すると GitHub Pages に反映される
+4. コミット & push すると GitHub Pages に反映される
 
 ## トラブルシューティング
 
