@@ -162,6 +162,12 @@ export default function SettingsScreen() {
             <TouchableOpacity onPress={() => handleDelete(item.id)}><Text style={styles.deleteBtn}>🗑️</Text></TouchableOpacity>
           </View>
         )}
+        ListFooterComponent={
+          <View style={styles.aboutSection}>
+            <Text style={styles.aboutTitle}>💪 コアトレーニング管理アプリ</Text>
+            <Text style={styles.aboutText}>毎日のトレーニング記録を管理し、達成状況を可視化するアプリです。</Text>
+          </View>
+        }
       />
     </View>
   );
@@ -192,4 +198,7 @@ const styles = StyleSheet.create({
   menuTarget: { fontSize: 14, color: '#888' },
   editBtn: { fontSize: 20, marginRight: 12 },
   deleteBtn: { fontSize: 20 },
+  aboutSection: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginTop: 16, marginBottom: 16, elevation: 2, alignItems: 'center' },
+  aboutTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 6 },
+  aboutText: { fontSize: 13, color: '#666', textAlign: 'center' },
 });
