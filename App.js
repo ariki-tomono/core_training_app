@@ -29,7 +29,8 @@ export default function App() {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: () => <Text style={{ fontSize: 22 }}>{icons[route.name]}</Text>,
-          tabBarLabelStyle: { fontSize: 12 },
+          tabBarLabelStyle: { fontSize: 11, paddingBottom: 4 },
+          tabBarStyle: { height: 60, paddingTop: 4 },
         })}
       >
         <Tab.Screen name="ホーム" component={HomeScreen} />
