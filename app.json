@@ -16,6 +16,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.masayukiariki.coretraining",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -29,6 +30,12 @@
     },
     "experiments": {
       "baseUrl": "/core_training_app"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3c152307-3881-4197-80f1-38d166d7f28e"
+      }
+    },
+    "owner": "masayukiariki"
   }
 }

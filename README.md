@@ -112,6 +112,16 @@ src/
 }
 ```
 
+## 運用環境
+
+本アプリは以下の 3 つの環境で利用できます。
+
+| 環境 | 用途 | アクセス方法 |
+|---|---|---|
+| 🌐 **Web版**（GitHub Pages） | ブラウザからアクセス、iPhone「ホーム画面に追加」 | https://ariki-tomono.github.io/core_training_app/ |
+| 🤖 **Android版**（APK） | ネイティブアプリとしてインストール | `eas build --platform android --profile preview` でビルド |
+| 🛠️ **Expo Go** | 開発・デバッグ用 | `npx expo start` で起動、QRコードで接続 |
+
 ## デプロイ（GitHub Pages）
 
 Web 版を GitHub Pages で公開しています。
@@ -144,6 +154,23 @@ npx expo export --platform web
 
 - リポジトリの **Settings** → **Pages** → **Source** を **GitHub Actions** に設定
 - `app.json` の `experiments.baseUrl` にリポジトリ名 `/core_training_app` を指定済み
+
+## デプロイ（Android APK）
+
+EAS Build を使って Android 用の APK を生成し、直接配布しています。
+
+### APK ビルド
+
+```bash
+eas build --platform android --profile preview
+```
+
+ビルド完了後に表示される URL を Android 端末で開き、APK をダウンロード→インストールします。
+
+### 注意事項
+
+- 初回インストール時に「提供元不明のアプリ」の警告が出る場合は「インストールを許可」してください
+- アプリ更新時は再度 `eas build` を実行し、新しい APK をインストールします
 
 ## アプリアイコンの作成
 
