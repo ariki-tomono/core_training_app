@@ -263,6 +263,20 @@ npx expo install --fix
 
 **補足**: 値を削除しただけ（`undefined`）では無効にならない。明示的に `false` を指定する必要がある。
 
+### APK 版でデータのエクスポート/インポートが失敗する（2025-06 解決済み）
+
+**原因**: Expo SDK 54 では `expo-file-system` の `writeAsStringAsync` / `readAsStringAsync` が非推奨になり、デフォルトインポートではエラーになる。
+
+**解決方法**: レガシー API からインポートするように変更。
+
+```js
+// 変更前
+import * as FileSystem from 'expo-file-system';
+
+// 変更後
+import * as FileSystem from 'expo-file-system/legacy';
+```
+
 ## ライセンス
 
 MIT
