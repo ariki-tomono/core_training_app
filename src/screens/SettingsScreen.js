@@ -2,6 +2,9 @@ import React, { useState, useCallback, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Alert, Platform, ScrollView, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getMenus, saveMenus, exportAllData, importAllData } from '../storage';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
 
 const TABS = ['メニュー管理', 'データ管理', 'このアプリについて'];
 
@@ -68,22 +71,40 @@ export default function SettingsScreen() {
   const handleExport = async () => {
     try {
       const json = await exportAllData();
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `core_training_backup_${new Date().toISOString().split('T')[0]}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      if (Platform.OS === 'web') {
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `core_training_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        const fileUri = FileSystem.documentDirectory + `core_training_backup_${new Date().toISOString().split('T')[0]}.json`;
+        await FileSystem.writeAsStringAsync(fileUri, json);
+        await Sharing.shareAsync(fileUri, { mimeType: 'application/json' });
+      }
       Alert.alert('完了', 'データをエクスポートしました');
     } catch (e) {
-      Alert.alert('エラー', 'エクスポートに失敗しました');
+      Alert.alert('エラー', 'エクスポートに失敗しました: ' + (e.message || e));
     }
   };
 
-  const handleImport = () => {
-    if (Platform.OS === 'web') {
-      fileInputRef.current?.click();
+  const handleImport = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        fileInputRef.current?.click();
+      } else {
+        const result = await DocumentPicker.getDocumentAsync({ type: 'application/json' });
+        if (result.canceled) return;
+        const fileUri = result.assets[0].uri;
+        const content = await FileSystem.readAsStringAsync(fileUri);
+        await importAllData(content);
+        setMenus(await getMenus());
+        Alert.alert('完了', 'データをインポートしました');
+      }
+    } catch (e) {
+      Alert.alert('エラー', 'インポートに失敗しました: ' + (e.message || e));
     }
   };
 
