@@ -251,6 +251,18 @@ npx expo install --fix
 
 **予防策**: パッケージ追加・更新時は `npm install` ではなく `npx expo install パッケージ名` を使うと、Expo SDK と互換性のあるバージョンが自動選択される。
 
+### Android でシステム UI とアプリのヘッダーが重なる（2025-06 解決済み）
+
+**原因**: Expo SDK 54 では `edgeToEdgeEnabled` を明示的に `false` に設定しない限り、デフォルトで edge-to-edge が有効になる。このため Android のステータスバーが半透明になり、アプリのヘッダーと重なって操作できなくなる。
+
+**解決方法**: `app.json` の `android` セクションに以下を追加。
+
+```json
+"edgeToEdgeEnabled": false
+```
+
+**補足**: 値を削除しただけ（`undefined`）では無効にならない。明示的に `false` を指定する必要がある。
+
 ## ライセンス
 
 MIT

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import HomeScreen from './src/screens/HomeScreen';
 import CalendarScreen from './src/screens/CalendarScreen';
 import StatsScreen from './src/screens/StatsScreen';
@@ -25,19 +26,22 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: () => <Text style={{ fontSize: 22 }}>{icons[route.name]}</Text>,
-          tabBarLabelStyle: { fontSize: 11, paddingBottom: 4 },
-          tabBarStyle: { height: 60, paddingTop: 4 },
-        })}
-      >
-        <Tab.Screen name="ホーム" component={HomeScreen} />
-        <Tab.Screen name="カレンダー" component={CalendarScreen} />
-        <Tab.Screen name="統計" component={StatsScreen} />
-        <Tab.Screen name="設定" component={SettingsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <>
+      <StatusBar style="dark" />
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: () => <Text style={{ fontSize: 22 }}>{icons[route.name]}</Text>,
+            tabBarLabelStyle: { fontSize: 11, paddingBottom: 4 },
+            tabBarStyle: { height: 60, paddingTop: 4 },
+          })}
+        >
+          <Tab.Screen name="ホーム" component={HomeScreen} />
+          <Tab.Screen name="カレンダー" component={CalendarScreen} />
+          <Tab.Screen name="統計" component={StatsScreen} />
+          <Tab.Screen name="設定" component={SettingsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
